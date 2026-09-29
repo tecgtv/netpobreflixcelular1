@@ -1,0 +1,101 @@
+#EXTM3U size="Medium"
+#EXTINF:-1 type="video" tvg-id="S01 E01" description="T1E1",Episódio 1
+http://7up2.com:80/series/3030370teste/teste3030370/3747975.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E02" description="T1E2",Episódio 2
+http://7up2.com:80/series/3030370teste/teste3030370/3747976.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E03" description="T1E3",Episódio 3
+http://7up2.com:80/series/3030370teste/teste3030370/3747977.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E04" description="T1E4",Episódio 4
+http://7up2.com:80/series/3030370teste/teste3030370/3747978.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E05" description="T1E5",Episódio 5
+http://7up2.com:80/series/3030370teste/teste3030370/3747979.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E06" description="T1E6",Episódio 6
+http://7up2.com:80/series/3030370teste/teste3030370/3747980.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E07" description="T1E7",Episódio 7
+http://7up2.com:80/series/3030370teste/teste3030370/3747981.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E08" description="T1E8",Episódio 8
+http://7up2.com:80/series/3030370teste/teste3030370/3747982.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E09" description="T1E9",Episódio 9
+http://7up2.com:80/series/3030370teste/teste3030370/3747983.mp4
+#EXTINF:-1 type="video" tvg-id="S01 E10" description="T1E10",Episódio 10
+http://7up2.com:80/series/3030370teste/teste3030370/3747984.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E01" description="T2E1",Episódio 1
+http://7up2.com:80/series/3030370teste/teste3030370/3747985.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E02" description="T2E2",Episódio 2
+http://7up2.com:80/series/3030370teste/teste3030370/3747986.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E03" description="T2E3",Episódio 3
+http://7up2.com:80/series/3030370teste/teste3030370/3747987.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E04" description="T2E4",Episódio 4
+http://7up2.com:80/series/3030370teste/teste3030370/3747988.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E05" description="T2E5",Episódio 5
+http://7up2.com:80/series/3030370teste/teste3030370/3747989.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E06" description="T2E6",Episódio 6
+http://7up2.com:80/series/3030370teste/teste3030370/3747990.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E07" description="T2E7",Episódio 7
+http://7up2.com:80/series/3030370teste/teste3030370/3747991.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E08" description="T2E8",Episódio 8
+http://7up2.com:80/series/3030370teste/teste3030370/3747992.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E09" description="T2E9",Episódio 9
+http://7up2.com:80/series/3030370teste/teste3030370/3747993.mp4
+#EXTINF:-1 type="video" tvg-id="S02 E10" description="T2E10",Episódio 10
+http://7up2.com:80/series/3030370teste/teste3030370/3747994.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E01" description="T3E1",Episódio 1
+http://7up2.com:80/series/3030370teste/teste3030370/3747995.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E02" description="T3E2",Episódio 2
+http://7up2.com:80/series/3030370teste/teste3030370/3747996.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E03" description="T3E3",Episódio 3
+http://7up2.com:80/series/3030370teste/teste3030370/3747997.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E04" description="T3E4",Episódio 4
+http://7up2.com:80/series/3030370teste/teste3030370/3747998.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E05" description="T3E5",Episódio 5
+http://7up2.com:80/series/3030370teste/teste3030370/3747999.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E06" description="T3E6",Episódio 6
+http://7up2.com:80/series/3030370teste/teste3030370/3748000.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E07" description="T3E7",Episódio 7
+http://7up2.com:80/series/3030370teste/teste3030370/3748001.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E08" description="T3E8",Episódio 8
+http://7up2.com:80/series/3030370teste/teste3030370/3748002.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E09" description="T3E9",Episódio 9
+http://7up2.com:80/series/3030370teste/teste3030370/3748003.mp4
+#EXTINF:-1 type="video" tvg-id="S03 E10" description="T3E10",Episódio 10
+http://7up2.com:80/series/3030370teste/teste3030370/3748004.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E01" description="T4E1",Episódio 1
+http://7up2.com:80/series/3030370teste/teste3030370/3748005.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E02" description="T4E2",Episódio 2
+http://7up2.com:80/series/3030370teste/teste3030370/3748006.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E03" description="T4E3",Episódio 3
+http://7up2.com:80/series/3030370teste/teste3030370/3748007.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E04" description="T4E4",Episódio 4
+http://7up2.com:80/series/3030370teste/teste3030370/3748008.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E05" description="T4E5",Episódio 5
+http://7up2.com:80/series/3030370teste/teste3030370/3748009.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E06" description="T4E6",Episódio 6
+http://7up2.com:80/series/3030370teste/teste3030370/3748010.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E07" description="T4E7",Episódio 7
+http://7up2.com:80/series/3030370teste/teste3030370/3748011.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E08" description="T4E8",Episódio 8
+http://7up2.com:80/series/3030370teste/teste3030370/3748012.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E09" description="T4E9",Episódio 9
+http://7up2.com:80/series/3030370teste/teste3030370/3748013.mp4
+#EXTINF:-1 type="video" tvg-id="S04 E10" description="T4E10",Episódio 10
+http://7up2.com:80/series/3030370teste/teste3030370/3748014.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E01" description="T5E1",Episódio 1
+http://7up2.com:80/series/3030370teste/teste3030370/3748015.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E02" description="T5E2",Episódio 2
+http://7up2.com:80/series/3030370teste/teste3030370/3748016.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E03" description="T5E3",Episódio 3
+http://7up2.com:80/series/3030370teste/teste3030370/3748017.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E04" description="T5E4",Episódio 4
+http://7up2.com:80/series/3030370teste/teste3030370/3748018.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E05" description="T5E5",Episódio 5
+http://7up2.com:80/series/3030370teste/teste3030370/3748019.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E06" description="T5E6",Episódio 6
+http://7up2.com:80/series/3030370teste/teste3030370/3748020.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E07" description="T5E7",Episódio 7
+http://7up2.com:80/series/3030370teste/teste3030370/3748021.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E08" description="T5E8",Episódio 8
+http://7up2.com:80/series/3030370teste/teste3030370/3748022.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E09" description="T5E9",Episódio 9
+http://7up2.com:80/series/3030370teste/teste3030370/3748023.mp4
+#EXTINF:-1 type="video" tvg-id="S05 E10" description="T5E10",Episódio 10
+http://7up2.com:80/series/3030370teste/teste3030370/3748024.mp4

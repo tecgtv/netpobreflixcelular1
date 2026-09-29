@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamDrive • Filmes</title>
+<link rel="stylesheet" href="style.css">
+<script>
+window.STREAMDRIVE_PREVIEW_TARGET = {
+  total: 8,
+  films: 8,
+  series: 0
+};
+</script>
+</head>
+<body>
+<div id="app"></div><div id="toast"></div>
+<div id="boot-loader" aria-live="polite"><div class="boot-logo">STREAMDRIVE</div><div class="boot-text">Carregando…</div></div>
+<script src="mobile-loader.js"></script>
+
+<script>
+/* StreamDrive: páginas de Filmes/Séries usam 10 prévias. */
+window.STREAMDRIVE_PREVIEW_COUNT = 10;
+</script>
+</body>
+</html>

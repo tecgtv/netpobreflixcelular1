@@ -1,0 +1,1 @@
+const restoredSeriesCategories=["Animação", "Aventura", "Ação", "Comédia", "Crime", "Documentário", "Drama", "Espionagem", "Fantasia", "Ficção científica", "Mistério", "Médico", "Policial", "Reality", "Super-heróis", "Terror"];

@@ -1,0 +1,1696 @@
+*{box-sizing:border-box}
+:root{--bg:#080808;--panel:#151515;--panel2:#202020;--text:#fff;--muted:#aaa;--red:#e50914;--red2:#b20710}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+.topbar{height:68px;background:rgba(0,0,0,.94);display:flex;align-items:center;gap:24px;padding:0 4%;position:sticky;top:0;z-index:20;border-bottom:1px solid #222}
+.logo{font-size:25px;font-weight:900;color:var(--red);letter-spacing:-1px;background:none;border:0;padding:0;cursor:pointer;white-space:nowrap}.logo:hover{filter:brightness(1.18);transform:scale(1.02)}
+.nav{display:flex;gap:16px;align-items:center;flex:1}
+/* Menus de categorias estilo streaming/Netflix: as categorias são geradas
+   automaticamente a partir do catálogo e separadas por Filmes e Séries. */
+.main-nav{height:100%}
+.nav-menu{position:relative;height:100%;display:flex;align-items:center}
+.nav-menu-trigger{height:100%;display:flex;align-items:center;gap:5px!important}
+.nav-chevron{font-size:11px;color:#888;transition:transform .2s ease}
+.nav-menu:hover .nav-chevron,.nav-menu:focus-within .nav-chevron{transform:rotate(180deg);color:#fff}
+.nav-dropdown{
+ position:absolute;top:calc(100% + 1px);left:50%;transform:translate(-50%,-8px);
+ min-width:230px;max-width:360px;padding:12px;background:rgba(18,18,18,.40);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+ border:1px solid #2d2d2d;border-top:2px solid var(--red);border-radius:0 0 7px 7px;
+ box-shadow:0 18px 45px rgba(0,0,0,.65);display:grid;grid-template-columns:1fr;
+ gap:4px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,transform .16s ease,visibility .16s ease;
+ z-index:120;
+}
+.nav-menu:hover .nav-dropdown,.nav-menu:focus-within .nav-dropdown{
+ opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0)
+}
+.nav-category-item{
+ border:0;background:transparent;color:#ddd;text-align:left;padding:11px 10px;border-radius:4px;
+ font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.nav-category-item:hover{background:#2a2a2a;color:#fff}
+.nav-category-empty{grid-column:1/-1;color:#777;padding:10px;font-size:13px}
+@media(max-width:900px){
+ .nav-dropdown{left:0;transform:translateY(-8px)}
+ .nav-menu:hover .nav-dropdown,.nav-menu:focus-within .nav-dropdown{transform:translateY(0)}
+}
+.nav button{background:none;border:0;color:#ddd}
+.nav button:hover,.nav button.active{color:#fff}
+.search{background:#171717;border:1px solid #444;color:#fff;border-radius:4px;padding:10px 12px;width:220px}
+.avatar{width:34px;height:34px;border-radius:5px;background:var(--red);display:grid;place-items:center;font-weight:700}
+
+/* Menu lateral de opções */
+.top-profile{width:36px;height:36px;padding:0;border:2px solid #333;border-radius:50%;overflow:hidden;background:#222;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 0 0 1px rgba(255,255,255,.04)}
+.top-profile img{width:100%;height:100%;object-fit:cover;display:block}
+.top-profile span{width:100%;height:100%;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;background:#e50914}
+.options-btn{width:42px;height:42px;border:1px solid #333;border-radius:7px;background:#171717;display:flex;align-items:center;justify-content:center;gap:3px;padding:0;flex-direction:column}
+.options-btn span{width:4px;height:4px;border-radius:50%;background:#fff;display:block}
+.options-btn:hover{background:#292929;border-color:#555}
+.options-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:80;backdrop-filter:blur(2px)}
+.options-drawer{position:fixed;top:0;right:0;width:min(340px,88vw);height:100vh;background:#111;border-left:1px solid #333;box-shadow:-20px 0 70px rgba(0,0,0,.65);z-index:90;transform:translateX(105%);transition:transform .25s ease;display:flex;flex-direction:column;padding:22px}
+.options-drawer.open{transform:translateX(0)}
+.options-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding-bottom:20px;border-bottom:1px solid #292929}
+.options-drawer-head h2{margin:0;font-size:24px}
+.drawer-close{background:transparent;border:0;color:#ddd;font-weight:700;padding:8px 0}
+.drawer-close:hover{color:#fff}
+.drawer-profile{display:flex;align-items:center;gap:13px;padding:22px 0;border-bottom:1px solid #292929}
+.drawer-profile .profile-avatar{width:58px;height:58px;margin:0;border-radius:8px;font-size:18px;flex:0 0 auto}
+.drawer-profile .profile-avatar img,.drawer-profile > img{width:58px;height:58px;object-fit:cover;display:block}
+.drawer-profile strong{display:block;font-size:16px}
+.drawer-profile small{display:block;color:#888;margin-top:4px}
+.drawer-option{width:100%;border:0;background:#1a1a1a;color:#fff;text-align:left;border-radius:6px;padding:15px 14px;margin-top:10px;display:flex;align-items:center;gap:12px;font-weight:700}
+.drawer-option:hover{background:#292929}
+.drawer-logout{margin-top:18px;color:#fff}
+.drawer-back{margin-top:auto;background:#222;color:#ddd}
+.drawer-back:hover{background:#333}
+@media(max-width:700px){.topbar{gap:10px;padding:0 3%}.nav{display:none}.search{width:auto;flex:1;min-width:80px}.top-profile{width:34px;height:34px}.options-btn{width:38px;height:38px}}
+.hero{min-height:640px;position:relative;overflow:hidden;background:#080808}
+.hero-preview{min-height:640px;padding:90px 5% 55px;display:flex;align-items:end;justify-content:space-between;gap:30px;position:relative;overflow:hidden;background:#080808 url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1800&q=85') center/cover no-repeat;animation:heroPreviewIn .45s ease}
+.hero-preview-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;background:#080808}
+.hero-preview-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#080808 0%,rgba(8,8,8,.88) 28%,rgba(8,8,8,.28) 68%,#080808 100%),linear-gradient(0deg,#080808 0%,transparent 55%)}
+.hero-content{max-width:650px;position:relative;z-index:2}
+.preview-label{display:inline-flex;align-items:center;gap:8px;color:#fff;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:12px}
+.preview-dot{width:8px;height:8px;border-radius:50%;background:#e50914;box-shadow:0 0 12px rgba(229,9,20,.8)}
+.preview-badge{position:relative;z-index:2;align-self:flex-end;margin:0 4% 0 0;display:flex;flex-direction:column;gap:5px;min-width:190px;padding:12px 16px;border-left:3px solid #e50914;background:rgba(0,0,0,.58);backdrop-filter:blur(5px);border-radius:3px;color:#fff;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.preview-badge span{font-size:10px;letter-spacing:2px;color:#bbb;font-weight:800}
+.preview-badge strong{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@keyframes heroPreviewIn{from{opacity:.35;transform:scale(1.02)}to{opacity:1;transform:scale(1)}}
+.kicker{color:#bbb;text-transform:uppercase;font-size:13px;letter-spacing:2px}
+.hero h1{font-size:48px;margin:10px 0}
+.hero p{font-size:17px;color:#ddd;line-height:1.55}
+.btn{border:0;border-radius:4px;padding:11px 18px;font-weight:700}
+.btn-red{background:var(--red);color:#fff}
+.btn-light{background:#fff;color:#111}
+.btn-dark{background:#333;color:#fff}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.container{padding:30px 4% 60px}
+.section-title{font-size:21px;margin:28px 0 14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:15px}
+.card{background:#151515;border-radius:5px;overflow:hidden;transition:.2s;min-width:0}
+.card:hover{transform:scale(1.03);background:#202020}
+.poster{width:100%;aspect-ratio:2/3;object-fit:cover;background:#222}
+.card-body{padding:11px}
+.card-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{color:var(--muted);font-size:12px;margin-top:6px}
+.card-actions{display:flex;gap:6px;margin-top:9px}
+.small-btn{background:#333;border:0;color:#fff;border-radius:3px;padding:7px 9px;font-size:12px}
+.login-page{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,#2a2a2a,#080808 55%)}
+.login-box{width:min(420px,92vw);background:rgba(0,0,0,.88);padding:38px;border-radius:8px}
+.login-box h1{font-size:30px;margin:0 0 24px}
+.field{margin:12px 0}
+.field label{display:block;color:#bbb;font-size:13px;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;background:#242424;border:1px solid #444;color:#fff;border-radius:4px;padding:12px}
+.login-box .btn{width:100%;margin-top:10px}
+.login-links{display:flex;justify-content:space-between;gap:8px;margin-top:18px;font-size:13px;color:#bbb}
+.login-links button{background:none;border:0;color:#bbb;padding:0}
+.login-links button:hover{color:#fff}
+.notice{background:#202020;border-radius:5px;padding:12px;color:#bbb;font-size:13px;margin-top:18px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:grid;place-items:center;padding:20px}
+.modal-box{background:#181818;width:min(760px,95vw);max-height:90vh;overflow:auto;border-radius:8px;padding:24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.close{background:#333;border:0;color:#fff;border-radius:50%;width:34px;height:34px}
+.detail{display:grid;grid-template-columns:220px 1fr;gap:24px}
+.detail img{width:100%;border-radius:5px}
+.video{width:100%;aspect-ratio:16/9;border:0;border-radius:5px;background:#000}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+.profile{background:#1c1c1c;border:1px solid #333;border-radius:7px;padding:18px;text-align:center;cursor:pointer}
+.profile-avatar{width:110px;height:110px;border-radius:8px;background:#242424;display:grid;place-items:center;font-size:30px;font-weight:800;margin:auto auto 12px;overflow:hidden}.profile-avatar img,.profile-preview-large img,.avatar-option img{width:100%;height:100%;object-fit:cover;display:block}
+.admin-wrap{padding:30px 4%}
+.admin-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:22px}
+.panel{background:var(--panel);border:1px solid #292929;border-radius:7px;padding:20px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px 8px;border-bottom:1px solid #303030;text-align:left;vertical-align:middle}
+th{color:#bbb;font-size:13px}
+td{font-size:14px}
+.status{padding:7px 10px;background:#202020;border-radius:4px;color:#bbb}
+.empty{padding:35px;color:#888;text-align:center;background:#111;border-radius:6px}
+.footer{padding:30px 4%;color:#777;border-top:1px solid #222}
+@media(max-width:800px){.nav{display:none}.search{width:150px}.hero{min-height:500px}.hero h1{font-size:34px}.detail{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}}
+
+/* Gerenciador de séries e episódios */
+.series-manager{margin-top:18px;padding:16px;background:#111;border:1px solid #303030;border-radius:7px}
+.manager-head,.season-head,.episode-editor-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.manager-head h3{margin:0}
+.form-help{color:#999;font-size:13px;line-height:1.5}
+.season-editor{margin-top:14px;padding:14px;background:#1b1b1b;border:1px solid #383838;border-radius:6px}
+.season-head{padding-bottom:10px;border-bottom:1px solid #303030}
+.season-head label{display:block;color:#bbb;font-size:12px;margin-bottom:5px}
+.season-number{width:130px;background:#242424;border:1px solid #444;color:#fff;border-radius:4px;padding:9px}
+.episodes-editor{display:grid;gap:10px;margin:12px 0}
+.episode-editor{padding:12px;background:#242424;border:1px solid #3a3a3a;border-radius:5px}
+.episode-editor-head{margin-bottom:10px}
+.episode-editor-head b{color:#ddd}
+.episode-fields{display:grid;grid-template-columns:120px 1fr;gap:10px}
+.episode-editor label{display:block;color:#bbb;font-size:12px;margin-bottom:5px}
+.episode-editor input,.episode-editor textarea{width:100%;background:#181818;border:1px solid #444;color:#fff;border-radius:4px;padding:10px}
+.danger-btn{background:#4a2020}
+.series-detail{display:grid;grid-template-columns:220px 1fr;gap:24px;margin-top:20px}
+.series-poster{width:100%;border-radius:5px;display:block}
+.series-synopsis{color:#ddd;line-height:1.6}
+.series-controls{display:flex;gap:12px;align-items:end;margin-bottom:14px}
+.series-controls label{display:block;color:#bbb;font-size:13px}
+.series-controls select{display:block;margin-top:6px;min-width:190px;background:#242424;border:1px solid #444;color:#fff;border-radius:4px;padding:10px}
+.episode-list{display:grid;gap:7px;max-height:260px;overflow:auto;margin-bottom:16px}
+.episode-item{display:grid;grid-template-columns:72px 1fr;text-align:left;gap:8px;background:#222;border:1px solid #333;color:#ddd;border-radius:5px;padding:10px 12px}
+.episode-item:hover,.episode-item.active{background:#333;border-color:#666;color:#fff}
+.episode-number{font-weight:700;color:#bbb}
+.episode-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.episode-selected{padding-top:8px}
+.episode-selected h3{margin:6px 0 8px}
+.episode-selected p{color:#bbb;line-height:1.5}
+@media(max-width:800px){
+ .series-detail{grid-template-columns:1fr}
+ .series-poster{max-width:220px}
+ .episode-fields{grid-template-columns:1fr}
+ .manager-head,.season-head{align-items:flex-start;flex-direction:column}
+}
+
+/* Gerenciamento de perfis e avatares */
+.profile-page{min-height:100vh;background:radial-gradient(circle at 50% 10%,#222,#080808 55%);padding:24px 4% 60px}
+.profile-page-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:45px}
+.profile-page-head .logo{margin:auto}
+.profile-page-body{width:min(900px,100%);margin:auto;text-align:center}
+.profile-page-body h1{font-size:38px;margin:0 0 8px}
+.profile-subtitle{color:#aaa;margin:0 0 30px}
+.profile-actions{margin:25px 0}
+.profile-manage{position:relative;padding:20px 14px}
+.profile-manage:hover{transform:translateY(-2px)}
+.profile-card-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.profile-editor{max-width:760px;margin:25px auto 0;text-align:left;background:#111;border:1px solid #333;border-radius:10px;padding:24px;box-shadow:0 20px 70px rgba(0,0,0,.55)}
+.profile-editor-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-bottom:18px}.profile-editor-head h2{text-align:center}.editor-back{background:transparent;border:0;color:#fff;font-size:15px;cursor:pointer;padding:8px 0}.profile-preview-large{width:130px;height:130px;border-radius:10px;background:#222;margin:5px auto 20px;overflow:hidden;display:grid;place-items:center;font-size:34px;font-weight:800}
+.profile-editor-head h2{margin:0}
+.close-editor{background:#333;border:0;color:#fff;border-radius:50%;width:32px;height:32px;font-size:20px}
+.avatar-label{display:block;color:#bbb;font-size:13px;margin:18px 0 8px}
+.avatar-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:12px}.avatar-option{height:86px;overflow:hidden;display:grid;place-items:center}
+.avatar-option{border:1px solid #3a3a3a;background:#242424;border-radius:8px;font-size:22px;transition:.15s;cursor:pointer}
+.avatar-option:hover,.avatar-option.selected{border-color:#fff;background:#333;transform:scale(1.04)}
+.profile-editor-actions{display:flex;gap:10px;margin-top:20px}
+.profile-editor-actions .btn{flex:1}
+.danger-btn{background:#4a2020!important}
+
+/* Acesso direto ao player pelas miniaturas */
+.poster-clickable{cursor:pointer}
+.poster-clickable:hover{filter:brightness(1.08)}
+.player-head{gap:18px}
+.modal-back{background:#333;border:0;color:#fff;border-radius:5px;padding:10px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.modal-back:hover{background:#444}
+.player-wrap{margin-top:18px;background:#000;border-radius:7px;overflow:hidden}
+.video-large{display:block;width:100%;min-height:420px;aspect-ratio:16/9}
+.player-empty{min-height:300px;display:grid;place-items:center;margin:0;border-radius:0}
+.player-info{display:grid;grid-template-columns:110px 1fr;gap:18px;margin-top:18px;align-items:start}
+.player-info img{width:110px;height:160px;object-fit:cover;border-radius:5px}
+@media(max-width:700px){.player-head{align-items:flex-start}.modal-back{font-size:12px;padding:8px 10px}.video-large{min-height:240px}.player-info{grid-template-columns:80px 1fr}.player-info img{width:80px;height:115px}}
+
+/* Player em estilo Netflix */
+.modal-player-mode{padding:0!important;background:#000!important;place-items:stretch!important}
+.modal-player-mode .netflix-player-box{width:100vw;max-width:none;height:100vh;max-height:none;padding:0;border-radius:0;background:#000;overflow:hidden}
+.netflix-player{position:relative;width:100%;height:100%;min-height:100vh;background:#000;overflow:hidden}
+.netflix-video{position:absolute;inset:0;background:#000;display:grid;place-items:center}
+.netflix-video .video-large{width:100%;height:100%;min-height:0;aspect-ratio:auto;border:0;border-radius:0;background:#000}
+.netflix-video .player-empty{width:100%;height:100%;min-height:100%;background:#111}
+.netflix-gradient{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,.18) 18%,rgba(0,0,0,0) 45%,rgba(0,0,0,.25) 60%,rgba(0,0,0,.96) 100%)}
+.netflix-back{position:absolute;z-index:20;top:28px;right:5%;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:50px;padding:11px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .25s ease,visibility .25s ease,background .2s ease,transform .2s ease}
+.netflix-back:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.netflix-player-hotzone{display:none}
+/* Captura movimento somente quando o player está oculto. Isso permite
+   revelar os controles mesmo quando o vídeo é um iframe externo. */
+.netflix-player-motion-capture{display:none;position:absolute;inset:0;z-index:19;background:transparent;cursor:default}
+.netflix-player.player-motion-capture .netflix-player-motion-capture{display:block}
+.netflix-back:hover{background:rgba(255,255,255,.16);transform:translateX(-2px)}
+.netflix-details{position:absolute;z-index:4;left:5%;bottom:7%;width:min(650px,88vw);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.75)}
+.netflix-details h1{font-size:clamp(28px,4vw,52px);line-height:1.05;margin:7px 0 12px;font-weight:800}
+.netflix-kicker{font-size:13px;letter-spacing:2px;font-weight:800;color:#ddd;text-transform:uppercase}
+.netflix-meta{color:#ddd;font-size:14px;font-weight:700;margin-bottom:12px}
+.netflix-details p{color:#eee;line-height:1.55;font-size:15px;max-width:620px;margin:0 0 18px}
+.netflix-list-btn{background:#fff;color:#111;border:0;border-radius:5px;padding:11px 17px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4)}
+.netflix-list-btn:hover{background:#ddd}
+@media(max-width:700px){
+ .netflix-back{top:16px;right:16px;font-size:13px;padding:9px 14px}
+ .netflix-player-hotzone{height:85px}
+ .netflix-details{left:6%;bottom:5%;width:88vw}
+ .netflix-details h1{font-size:28px}
+ .netflix-details p{font-size:13px;max-height:82px;overflow:hidden}
+}
+
+/* Interface do player: desaparece quando o vídeo fica parado e volta ao mover o mouse */
+.netflix-ui{opacity:1;visibility:visible;transition:opacity .25s ease,visibility .25s ease}
+.netflix-player.player-ui-hidden .netflix-ui{opacity:0;visibility:hidden;pointer-events:none}
+.netflix-player.player-ui-hidden{cursor:none}
+.netflix-player.player-ui-hidden .netflix-player-motion-capture{cursor:default}
+@media (hover:none){.netflix-player.player-ui-hidden{cursor:auto}.netflix-player-motion-capture{display:none!important}}
+
+/* Fileiras de categorias da Home — visual inspirado em streaming/Netflix */
+/* Fileira dinâmica de títulos reproduzidos recentemente */
+.recently-watched-row{margin-bottom:42px}
+.recently-watched-row .section-title::before{content:"↻";display:inline-block;margin-right:8px;color:#e50914;font-size:.9em}
+
+.category-row{position:relative;margin:0 0 38px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+.section-heading .section-title{margin:0;font-size:22px;font-weight:800;letter-spacing:-.2px}
+.category-arrows{display:flex;gap:7px;opacity:0;transform:translateY(3px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.category-row:hover .category-arrows,.category-row:focus-within .category-arrows{opacity:1;transform:translateY(0);pointer-events:auto}
+.carousel-arrow{width:40px;height:40px;border:1px solid rgba(255,255,255,.18);background:rgba(18,18,18,.9);color:#fff;border-radius:5px;font-size:29px;line-height:1;display:grid;place-items:center;transition:.18s ease;box-shadow:0 5px 18px rgba(0,0,0,.35)}
+.carousel-arrow:hover:not(:disabled){background:#e50914;border-color:#e50914;transform:scale(1.06)}
+.carousel-arrow:disabled{opacity:.28;cursor:not-allowed}
+.category-viewport{overflow:visible;width:100%;position:relative}
+.category-viewport:before,.category-viewport:after{content:"";position:absolute;top:0;bottom:0;width:42px;z-index:4;pointer-events:none;opacity:0;transition:opacity .2s ease}
+.category-viewport:before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.category-viewport:after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+.category-row:hover .category-viewport:before,.category-row:hover .category-viewport:after{opacity:.45}
+.category-carousel{display:flex;width:100%;transition:transform .32s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.carousel-page{flex:0 0 100%;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:16px}
+.carousel-page .card{min-width:0;position:relative;z-index:1;box-shadow:0 3px 12px rgba(0,0,0,.25);transition:transform .22s ease,box-shadow .22s ease,background .22s ease}
+.carousel-page .card:hover{transform:scale(1.075);z-index:8;box-shadow:0 16px 35px rgba(0,0,0,.65);background:#202020}
+.carousel-page .card .poster{transition:transform .28s ease,filter .22s ease}
+.carousel-page .card:hover .poster{transform:scale(1.035);filter:brightness(1.08)}
+.category-more-wrap{text-align:right;margin-top:10px}
+.category-more{background:transparent;border:0;color:#bbb;font-size:14px;font-weight:800;padding:6px 2px;cursor:pointer;transition:color .18s ease,transform .18s ease}
+.category-more:hover{color:#fff;text-decoration:underline;transform:translateX(2px)}
+.category-page-container{padding-top:25px}
+.category-page{padding:5px 0 45px}
+.category-page-head{display:flex;align-items:flex-start;gap:24px;margin-bottom:28px}
+.category-page-head h1{font-size:clamp(30px,4vw,46px);margin:4px 0 5px}
+.category-page-head p{margin:0;color:#999}
+.netflix-kicker{color:#e50914;font-size:11px;font-weight:900;letter-spacing:2px}
+.category-back{border:1px solid #444;background:#181818;color:#fff;border-radius:5px;padding:11px 16px;font-weight:700;white-space:nowrap}
+.category-back:hover{background:#292929}
+.category-all-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+@media(max-width:1400px){
+ .carousel-page{grid-template-columns:repeat(7,minmax(0,1fr))}
+ .category-all-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media(max-width:1100px){
+ .carousel-page{grid-template-columns:repeat(5,minmax(0,1fr))}
+ .category-all-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:800px){
+ .carousel-page{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+ .category-all-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+ .category-page-head{gap:14px}
+}
+@media(max-width:500px){
+ .section-heading{margin-bottom:10px}
+ .carousel-arrow{width:34px;height:34px;font-size:24px}
+ .carousel-page{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .category-all-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .category-page-head{flex-direction:column}
+ .category-back{align-self:flex-start}
+}
+
+
+/* Prévia principal: maior, com várias opções e navegação lateral */
+.hero-preview{
+  min-height:640px;
+  padding-bottom:55px;
+}
+.hero-preview-arrow{
+  position:absolute;
+  z-index:5;
+  top:50%;
+  transform:translateY(-50%);
+  width:48px;
+  height:82px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.42);
+  color:#fff;
+  border-radius:5px;
+  font-size:52px;
+  line-height:1;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  opacity:.55;
+  transition:opacity .2s,background .2s,transform .2s;
+  backdrop-filter:blur(5px);
+}
+.hero-preview-arrow:hover{
+  opacity:1;
+  background:rgba(0,0,0,.68);
+  transform:translateY(-50%) scale(1.04);
+}
+.hero-preview-prev{left:20px}
+.hero-preview-next{right:20px}
+.hero-dots{
+  position:absolute;
+  z-index:6;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+.hero-dot{
+  width:8px;
+  height:8px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.42);
+  cursor:pointer;
+  transition:.2s;
+}
+.hero-dot.active{
+  width:25px;
+  border-radius:5px;
+  background:#fff;
+}
+.preview-badge{
+  align-self:flex-end;
+  margin-bottom:0;
+  transform:translateY(0);
+}
+.category-more-wrap{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  margin-top:14px;
+  padding:8px 2px 0;
+}
+.category-more{
+  min-width:100px;
+  padding:9px 15px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:4px;
+  background:#1b1b1b;
+  color:#ddd;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.category-more:hover{
+  background:#e50914;
+  border-color:#e50914;
+  color:#fff;
+  transform:translateY(-1px);
+}
+@media(max-width:800px){
+  .hero,.hero-preview{min-height:560px}
+  .hero-preview{padding:70px 10% 55px}
+  .hero-preview-arrow{width:38px;height:62px;font-size:40px}
+  .hero-preview-prev{left:8px}.hero-preview-next{right:8px}
+  .preview-badge{display:none}
+}
+
+/* Prévias das categorias: ao passar o mouse, o card cresce e mostra a prévia */
+.category-preview-card{overflow:visible!important}
+.category-preview-card .card-media{position:relative;aspect-ratio:2/3;overflow:hidden;background:#111;cursor:pointer;border-radius:4px 4px 0 0}
+.category-preview-card .card-media .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s ease,transform .35s ease,filter .25s ease}
+.card-preview-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s ease;z-index:2;background:#111}
+.card-preview-shade{position:absolute;inset:0;z-index:3;background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.08) 55%,rgba(0,0,0,.18));opacity:0;transition:opacity .22s ease;pointer-events:none}
+.card-preview-info{position:absolute;z-index:5;left:12px;right:12px;bottom:12px;display:flex;flex-direction:column;gap:4px;opacity:0;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease;color:#fff;text-shadow:0 2px 8px #000;pointer-events:none}
+.card-preview-info span{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#fff}
+.card-preview-info strong{font-size:15px;line-height:1.15}
+.card-preview-info small{font-size:11px;color:#ddd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.category-preview-card:hover{transform:scale(1.13)!important;z-index:20!important;box-shadow:0 18px 42px rgba(0,0,0,.75)!important;background:#181818}
+.category-preview-card:hover .card-media{box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.category-preview-card:hover .card-media .poster{transform:scale(1.025);filter:brightness(.72)}
+.category-preview-card:hover .card-preview-video{opacity:1}
+.category-preview-card:hover .card-preview-shade,.category-preview-card:hover .card-preview-info{opacity:1}
+.category-preview-card:hover .card-preview-info{transform:translateY(0)}
+.category-preview-card .card-body{position:relative;z-index:7}
+@media (hover:none){
+ .category-preview-card:hover{transform:none!important}
+ .card-preview-info,.card-preview-shade,.card-preview-play{display:none}
+}
+
+
+/* Prévias nas categorias, inspiradas em cards de streaming */
+.category-preview-card{overflow:visible!important}
+.category-preview-card .card-media{position:relative;aspect-ratio:2/3;overflow:hidden;background:#111;cursor:pointer;border-radius:4px 4px 0 0}
+.category-preview-card .card-media .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s ease,transform .35s ease,filter .25s ease}
+.card-preview-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s ease;z-index:2;background:#111}
+.card-preview-shade{position:absolute;inset:0;z-index:3;background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.08) 55%,rgba(0,0,0,.18));opacity:0;transition:opacity .22s ease;pointer-events:none}
+.card-preview-info{position:absolute;z-index:5;left:12px;right:12px;bottom:12px;display:flex;flex-direction:column;gap:4px;opacity:0;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease;color:#fff;text-shadow:0 2px 8px #000;pointer-events:none}
+.card-preview-info span{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#fff}
+.card-preview-info strong{font-size:15px;line-height:1.15}
+.card-preview-info small{font-size:11px;color:#ddd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-preview-play{position:absolute;z-index:6;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);color:#111;font-size:14px;opacity:0;transform:scale(.85);transition:opacity .22s ease,transform .22s ease;box-shadow:0 4px 15px rgba(0,0,0,.45);pointer-events:none}
+.category-preview-card:hover{transform:scale(1.13)!important;z-index:20!important;box-shadow:0 18px 42px rgba(0,0,0,.75)!important;background:#181818}
+.category-preview-card:hover .card-media .poster{transform:scale(1.025);filter:brightness(.72)}
+.category-preview-card:hover .card-preview-video{opacity:1}
+.category-preview-card:hover .card-preview-shade,.category-preview-card:hover .card-preview-info{opacity:1}
+.category-preview-card:hover .card-preview-info{transform:translateY(0)}
+@media (hover:none){
+ .category-preview-card:hover{transform:none!important}
+ .card-preview-info,.card-preview-shade,.card-preview-play{display:none}
+}
+.nav-category-home{font-weight:800;color:#fff;border-bottom:1px solid #333;border-radius:0;padding-bottom:12px;margin-bottom:3px}
+.nav-category-home:hover{background:rgba(255,255,255,.10)}
+
+/* V2.8 - menus de categorias com abertura por hover e clique */
+.nav-menu.open .nav-dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0)}
+.nav-menu.open .nav-chevron{transform:rotate(180deg);color:#fff}
+.nav-menu.open{z-index:130}
+.nav-menu.open .nav-menu-trigger{color:#fff}
+
+/* Prévia grande dentro da página de cada categoria */
+.category-page-preview{margin:0 0 34px;border-radius:8px;overflow:hidden;background:#111;box-shadow:0 15px 45px rgba(0,0,0,.45)}
+.category-page-preview-media{position:relative;min-height:390px;overflow:hidden;background:#111}
+.category-page-preview-video,.category-page-preview-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.category-page-preview-fallback{display:none}
+.category-page-preview-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.52) 38%,rgba(0,0,0,.12) 75%,rgba(0,0,0,.5) 100%),linear-gradient(0deg,rgba(0,0,0,.78),transparent 58%);z-index:2}
+.category-page-preview-copy{position:absolute;z-index:3;left:5%;bottom:34px;max-width:540px;text-shadow:0 2px 12px #000}
+.category-page-preview-copy span{font-size:11px;letter-spacing:2px;font-weight:900;color:#ddd}
+.category-page-preview-copy h2{font-size:clamp(28px,4vw,48px);margin:7px 0 10px}
+.category-page-preview-copy p{color:#ddd;line-height:1.5;max-width:520px;margin:0 0 18px}
+@media(max-width:700px){.category-page-preview-media{min-height:300px}.category-page-preview-copy{left:22px;right:22px;bottom:22px}.category-page-preview-copy p{display:none}}
+
+/* V2.9 — navegação de categorias mais próxima da experiência Netflix */
+.topbar{z-index:200;background:rgba(8,8,8,.96);box-shadow:0 2px 18px rgba(0,0,0,.35)}
+.nav-menu{z-index:210}
+.nav-dropdown{z-index:9999;left:0;transform:translateY(-8px);min-width:250px;max-height:70vh;overflow-y:auto;background:rgba(18,18,18,.40);}
+.nav-menu:hover .nav-dropdown,.nav-menu:focus-within .nav-dropdown,.nav-menu.open .nav-dropdown{transform:translateY(0)}
+.nav-category-item{width:100%;display:block;text-align:left;cursor:pointer}
+.category-page-topbar{display:flex;align-items:center;gap:18px;margin:0 0 14px;min-height:44px}
+.category-breadcrumb{color:#888;font-size:12px;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.category-back{cursor:pointer;background:rgba(35,35,35,.92);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:4px;padding:10px 16px;font-weight:800;transition:.18s ease}
+.category-back:hover{background:#e50914;border-color:#e50914;transform:translateX(-2px)}
+.category-page-preview{margin-top:0}
+.category-page-head{margin-top:28px}
+@media(max-width:700px){
+ .topbar{gap:10px;padding:0 3%}.nav{gap:7px}.nav button{font-size:12px}.search{width:125px}
+ .nav-dropdown{left:0;min-width:220px;max-width:80vw}
+ .category-page-topbar{gap:10px}.category-breadcrumb{font-size:10px}
+}
+
+
+/* V2.10 — botão Voltar fixado visualmente no topo da página de categoria */
+.category-page-container{padding-top:18px}
+.category-page-topbar-primary{position:relative;z-index:20;display:flex;align-items:center;gap:10px;width:100%;padding:10px 0 14px;margin:0 0 12px;background:transparent}
+.category-page-topbar-primary .category-back,.category-home-top{height:42px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.category-home-top{cursor:pointer;background:rgba(229,9,20,.92);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:4px;padding:10px 16px;font-weight:800;transition:.18s ease}
+.category-home-top:hover{background:#b20710;transform:translateY(-1px)}
+.category-page-topbar-primary .category-breadcrumb{margin-left:4px}
+@media(max-width:700px){.category-page-topbar-primary{flex-wrap:wrap}.category-page-topbar-primary .category-breadcrumb{width:100%;order:3;margin-top:2px}}
+/* V2.11 — categoria encostada à barra superior, com ações sobre a prévia */
+.category-page-container{padding-top:0!important;padding-left:4%;padding-right:4%}
+.category-page{padding:0 0 45px!important;position:relative}
+.category-page-topbar-primary{position:absolute!important;top:18px;left:0;right:0;z-index:15;display:flex;align-items:center;gap:10px;padding:0 4%;pointer-events:none}
+.category-page-topbar-primary .category-back,
+.category-page-topbar-primary .category-home-top{pointer-events:auto}
+.category-page-topbar-primary .category-breadcrumb{margin-left:auto;color:rgba(255,255,255,.78);font-size:12px;font-weight:700;letter-spacing:1px;text-shadow:0 2px 8px #000;background:rgba(0,0,0,.34);backdrop-filter:blur(5px);padding:9px 12px;border-radius:4px}
+.category-page-topbar-primary .category-back,
+.category-page-topbar-primary .category-home-top{border:1px solid rgba(255,255,255,.25);background:rgba(18,18,18,.72);color:#fff;border-radius:4px;padding:10px 15px;font-weight:800;box-shadow:0 5px 18px rgba(0,0,0,.35);backdrop-filter:blur(8px)}
+.category-page-topbar-primary .category-back:hover,
+.category-page-topbar-primary .category-home-top:hover{background:rgba(45,45,45,.88);border-color:rgba(255,255,255,.42)}
+.category-page-preview{margin:0!important;padding:0!important}
+.category-page-preview-media{position:relative;width:100%;height:min(72vh,720px);min-height:520px;overflow:hidden;background:#080808}
+.category-page-preview-video,.category-page-preview-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.category-page-preview-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.46) 0%,rgba(0,0,0,0) 24%,rgba(0,0,0,.12) 55%,#080808 100%),linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.08) 65%,rgba(0,0,0,.48));z-index:2}
+.category-page-preview-copy{position:absolute;z-index:4;left:4%;bottom:58px;max-width:650px;text-shadow:0 2px 12px #000}
+.category-page-preview-copy span{color:#fff;font-size:12px;font-weight:900;letter-spacing:2px}
+.category-page-preview-copy h2{font-size:clamp(30px,4vw,54px);margin:8px 0}
+.category-page-preview-copy p{color:#eee;line-height:1.5;max-width:580px}
+.category-page-head{margin-top:0!important;padding-top:28px}
+@media(max-width:700px){
+ .category-page-container{padding-left:0!important;padding-right:0!important}
+ .category-page-topbar-primary{padding:0 4%;top:12px;flex-wrap:wrap}
+ .category-page-topbar-primary .category-breadcrumb{display:none}
+ .category-page-preview-media{height:62vh;min-height:430px}
+ .category-page-preview-copy{left:5%;right:5%;bottom:35px}
+ .category-page-preview-copy h2{font-size:30px}
+}
+
+/* V2.12 — remove o espaço vazio do hero na página de categoria. O hero da Home permanece intacto. */
+#hero.category-mode-hidden{display:none!important;min-height:0!important;height:0!important;margin:0!important;padding:0!important;overflow:hidden!important}
+.category-page-container{padding-top:0!important}
+.category-page{margin-top:0!important}
+.category-page-preview{margin-top:0!important}
+
+/* Prévia da Home: vídeo/iframe ocupa toda a área do destaque */
+.hero-preview-video.hero-preview-frame{width:100%;height:100%;border:0;display:block;object-fit:cover;background:#000;}
+
+/* V2.16 — menus de categorias: bordas totalmente transparentes */
+.nav-dropdown{
+  border:1px solid transparent !important;
+  border-top:2px solid transparent !important;
+  outline:none !important;
+  box-shadow:0 18px 45px rgba(0,0,0,.45) !important;
+}
+.nav-dropdown:focus,
+.nav-dropdown:focus-visible,
+.nav-category-item:focus,
+.nav-category-item:focus-visible{
+  outline:none !important;
+}
+
+
+/* === PLAYER STREAMDRIVE / EXPERIÊNCIA DE STREAMING === */
+.modal.modal-player-mode{
+  display:grid!important;
+  position:fixed!important;
+  inset:0!important;
+  padding:0!important;
+  margin:0!important;
+  z-index:9999!important;
+  background:#000!important;
+  overflow:hidden!important;
+}
+.modal-player-mode .netflix-player-box{
+  position:relative!important;
+  width:100vw!important;
+  height:100vh!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:#000!important;
+  overflow:hidden!important;
+}
+.netflix-player{
+  position:relative!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:100vh!important;
+  background:#000!important;
+  overflow:hidden!important;
+}
+.netflix-video{
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#000!important;
+}
+.netflix-video .video-large{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  min-height:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  object-fit:contain!important;
+  background:#000!important;
+}
+.netflix-video video.video-large{
+  object-fit:contain!important;
+}
+.netflix-topbar{
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  z-index:30!important;
+  height:96px!important;
+  padding:24px 40px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  pointer-events:none!important;
+  background:linear-gradient(to bottom,rgba(0,0,0,.75),rgba(0,0,0,0))!important;
+}
+.netflix-topbar .netflix-back{
+  position:relative!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  pointer-events:auto!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  min-height:42px!important;
+  padding:10px 17px!important;
+  border:1px solid rgba(255,255,255,.25)!important;
+  border-radius:6px!important;
+  background:rgba(0,0,0,.55)!important;
+  color:#fff!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  box-shadow:0 4px 20px rgba(0,0,0,.35)!important;
+}
+.netflix-topbar .netflix-back:hover{
+  background:rgba(255,255,255,.14)!important;
+  transform:none!important;
+}
+.netflix-gradient{
+  z-index:3!important;
+}
+.netflix-details{
+  z-index:5!important;
+  pointer-events:auto!important;
+}
+.netflix-player-motion-capture{
+  z-index:19!important;
+}
+@media(max-width:700px){
+  .netflix-topbar{padding:16px!important;height:78px!important}
+  .netflix-topbar .netflix-back{min-height:38px!important;padding:8px 13px!important;font-size:14px!important}
+}
+
+/* O botão Voltar permanece visível no topo, mesmo quando os detalhes somem. */
+.netflix-player.player-ui-hidden .netflix-topbar{opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+
+/* =========================================================
+   V2.21 — barra superior inspirada na navegação da referência
+   e cards com expansão tipo streaming/Netflix.
+   ========================================================= */
+.topbar{
+  height:48px;
+  min-height:48px;
+  padding:0 4%;
+  gap:24px;
+  position:sticky;
+  top:0;
+  background:rgba(10,10,10,.97);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  box-shadow:0 3px 20px rgba(0,0,0,.45);
+  z-index:500;
+}
+.logo{
+  font-size:28px;
+  line-height:1;
+  letter-spacing:-1.3px;
+  color:#e50914;
+  text-shadow:0 0 10px rgba(229,9,20,.12);
+}
+.main-nav{height:48px;gap:22px;align-items:center}
+.main-nav>button,.nav-menu-trigger,.top-nav-link{
+  height:48px;
+  display:flex;
+  align-items:center;
+  padding:0;
+  color:#bdbdbd!important;
+  background:transparent;
+  border:0;
+  font-size:15px;
+  font-weight:500;
+  white-space:nowrap;
+  transition:color .16s ease,transform .16s ease;
+}
+.main-nav>button:hover,.nav-menu:hover>.nav-menu-trigger,.main-nav .top-nav-link.active,.nav-menu.open>.nav-menu-trigger{color:#fff!important}
+.main-nav>button:hover,.nav-menu-trigger:hover{transform:translateY(-1px)}
+.nav-menu{height:48px;display:flex;align-items:center;position:relative}
+.nav-menu-trigger{gap:0!important}
+.nav-chevron{display:none!important}
+.nav-dropdown{
+  top:48px!important;
+  left:0!important;
+  transform:translateY(-8px)!important;
+  min-width:230px!important;
+  max-width:330px!important;
+  padding:9px!important;
+  background:rgba(20,20,20,.96)!important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-top:2px solid #e50914!important;
+  border-radius:0 0 6px 6px;
+}
+.nav-menu:hover .nav-dropdown,.nav-menu:focus-within .nav-dropdown,.nav-menu.open .nav-dropdown{transform:translateY(0)!important}
+.nav-category-item{font-size:13px!important;padding:10px 11px!important;color:#ddd!important}
+.nav-category-item:hover{background:#2b2b2b!important;color:#fff!important}
+.top-actions{margin-left:auto;display:flex;align-items:center;height:48px;gap:14px;flex:0 0 auto}
+.top-search-btn,.top-icon-btn,.kids-link{border:0;background:transparent;color:#ddd;padding:0;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.top-search-btn{font-size:28px;line-height:1;transform:rotate(-20deg);width:28px}
+.top-search-btn:hover,.top-icon-btn:hover,.kids-link:hover{color:#fff}
+.search{
+  width:0!important;
+  min-width:0!important;
+  opacity:0;
+  padding:0!important;
+  border:0!important;
+  background:#111!important;
+  transition:width .2s ease,opacity .2s ease,padding .2s ease,border .2s ease;
+}
+.search.search-open{width:210px!important;opacity:1;padding:8px 10px!important;border:1px solid #555!important}
+.kids-link{font-size:11px;font-weight:600;letter-spacing:.2px}
+.top-icon-btn{font-size:20px;position:relative;width:24px}
+.gift-btn{font-size:22px}
+.notification-btn b{position:absolute;right:-5px;top:8px;min-width:16px;height:16px;padding:0 3px;border-radius:9px;background:#e50914;color:#fff;font-size:9px;display:grid;place-items:center;border:1px solid #111}
+.bell-icon{font-size:20px;line-height:1}
+.profile-trigger{width:auto!important;height:48px!important;border:0!important;border-radius:0!important;background:transparent!important;display:flex!important;align-items:center!important;gap:6px!important;overflow:visible!important;box-shadow:none!important;padding:0!important}
+.profile-trigger .top-profile,.profile-trigger.top-profile{width:30px!important;height:30px!important;border-radius:3px!important;border:1px solid #333!important}
+.profile-chevron{font-size:10px;color:#bbb;line-height:1}
+.options-btn{display:none!important}
+
+/* Cards em formato paisagem, como a referência */
+.cards{position:relative;overflow:visible;gap:14px}
+.category-preview-card{
+  min-width:0;
+  overflow:visible!important;
+  border-radius:4px;
+  background:#151515;
+  transform-origin:center center;
+  transition:transform .22s ease,box-shadow .22s ease,background .22s ease;
+}
+.category-preview-card .card-media{
+  aspect-ratio:16/9!important;
+  border-radius:4px;
+  overflow:hidden;
+}
+.category-preview-card .card-media .poster{aspect-ratio:16/9;object-fit:cover}
+.category-preview-card .card-preview-video{object-fit:cover}
+.category-preview-card .card-body{
+  padding:9px 10px 10px;
+  background:#181818;
+  border-radius:0 0 4px 4px;
+}
+.category-preview-card .card-title{font-size:13px}
+.category-preview-card .meta{font-size:11px}
+.category-preview-card .card-actions{margin-top:7px}
+
+/* Expansão sem quebrar a grade: a miniatura cresce por cima das vizinhas. */
+.category-preview-card:hover,
+.category-preview-card:focus-within{
+  transform:scale(1.34)!important;
+  z-index:80!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.85)!important;
+  background:#181818!important;
+}
+.category-preview-card:hover .card-media .poster,
+.category-preview-card:focus-within .card-media .poster{transform:scale(1.02);filter:brightness(.68)}
+.category-preview-card:hover .card-preview-shade,
+.category-preview-card:focus-within .card-preview-shade{opacity:1}
+.category-preview-card:hover .card-preview-info,
+.category-preview-card:focus-within .card-preview-info{opacity:1;transform:translateY(0)}
+.category-preview-card:hover .card-preview-video,
+.category-preview-card:focus-within .card-preview-video{opacity:1}
+.category-preview-card:hover .card-body,
+.category-preview-card:focus-within .card-body{
+  background:#181818;
+  padding-top:8px;
+}
+.card-hover-actions{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.hover-circle{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid #777;background:#202020;color:#fff;
+  display:grid;place-items:center;padding:0;font-size:13px;line-height:1;
+  transition:background .15s,border-color .15s,transform .15s;
+}
+.hover-circle:hover{background:#fff;color:#111;border-color:#fff;transform:scale(1.06)}
+.hover-circle.play-action{background:#fff;color:#111;border-color:#fff}
+.hover-circle.reaction-like,.hover-circle.reaction-dislike{font-size:14px;line-height:1;}
+.hover-more{margin-left:auto;font-size:17px}
+.category-preview-card:not(:hover):not(:focus-within) .card-hover-actions{display:none}
+.category-preview-card:not(:hover):not(:focus-within) .card-actions{display:none}
+.category-preview-card:not(:hover):not(:focus-within) .card-body{padding-top:8px}
+
+/* A linha de carrossel deixa espaço vertical para a expansão. */
+.category-row{padding-top:8px;padding-bottom:52px}
+.carousel-page{overflow:visible!important}
+.category-carousel{overflow:visible!important}
+
+@media(max-width:1000px){
+  .topbar{padding:0 3%;gap:15px}
+  .main-nav{gap:14px}
+  .main-nav>button,.nav-menu-trigger,.top-nav-link{font-size:14px}
+  .top-actions{gap:9px}
+  .kids-link{display:none}
+  .category-preview-card:hover,.category-preview-card:focus-within{transform:scale(1.18)!important}
+}
+@media(max-width:700px){
+  .topbar{height:52px;min-height:52px}
+  .main-nav{display:none}
+  .logo{font-size:22px}
+  .top-actions{gap:8px}
+  .search.search-open{width:150px!important}
+  .category-preview-card:hover,.category-preview-card:focus-within{transform:scale(1.08)!important}
+  .category-row{padding-bottom:28px}
+}
+
+
+/* V2.21 ajustes finais: 5–6 miniaturas por fileira e expansão dominante */
+.carousel-page{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:16px!important}
+.carousel-page .category-preview-card:hover,
+.carousel-page .category-preview-card:focus-within{transform:scale(1.34)!important;z-index:90!important}
+.profile-trigger .profile-chevron{
+  width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;
+  display:block!important;padding:0!important;margin:0!important;
+  border-radius:0!important;background:transparent!important;color:#bbb!important;
+  font-size:10px!important;font-weight:400!important;
+}
+@media(max-width:1400px){.carousel-page{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+@media(max-width:900px){
+  .carousel-page{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .carousel-page .category-preview-card:hover,.carousel-page .category-preview-card:focus-within{transform:scale(1.18)!important}
+}
+@media(max-width:650px){
+  .carousel-page{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .carousel-page .category-preview-card:hover,.carousel-page .category-preview-card:focus-within{transform:scale(1.10)!important}
+}
+@media(max-width:450px){.carousel-page{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+.top-search-btn svg,.top-icon-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+.top-search-btn svg{width:22px;height:22px}
+.gift-btn svg{width:20px;height:20px}
+.bell-icon{width:20px!important;height:20px!important;display:block!important}
+.login-test-credentials{margin-top:16px;padding:13px;border:1px solid #333;border-radius:8px;background:#181818;color:#aaa;font-size:12px;line-height:1.6;display:grid;gap:10px}.login-test-credentials>div{padding-bottom:9px;border-bottom:1px solid #2a2a2a}.login-test-credentials>div:last-child{padding-bottom:0;border-bottom:0}.login-test-credentials b{display:block;color:#fff;margin-bottom:3px}.login-test-credentials span{display:block}.login-test-credentials strong{color:#e50914;font-family:Consolas,monospace}
+
+
+/* Janela de detalhes/preview ao clicar na miniatura.
+   Adicionada sem alterar a mecânica existente do player principal. */
+.content-preview-modal{
+ position:relative;
+ width:min(1000px,94vw);
+ min-height:520px;
+ display:grid;
+ grid-template-columns:42% 58%;
+ background:#080808;
+ color:#fff;
+ border-radius:8px;
+ overflow:hidden;
+ box-shadow:0 30px 100px rgba(0,0,0,.85);
+}
+.content-preview-info{
+ position:relative;
+ z-index:2;
+ padding:42px 34px 30px;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ background:linear-gradient(90deg,#050505 0%,#090909 78%,rgba(9,9,9,.92) 100%);
+}
+.content-preview-kicker{
+ color:#bbb;
+ font-size:11px;
+ font-weight:900;
+ letter-spacing:1.7px;
+ text-transform:uppercase;
+ margin-bottom:10px;
+}
+.content-preview-info h2{
+ margin:0 0 12px;
+ font-size:clamp(30px,4vw,48px);
+ line-height:1.02;
+ font-weight:800;
+}
+.content-preview-meta{
+ color:#ddd;
+ font-size:13px;
+ font-weight:700;
+ margin-bottom:16px;
+}
+.content-preview-synopsis{
+ color:#ddd;
+ line-height:1.55;
+ font-size:14px;
+ max-width:440px;
+ margin:0 0 22px;
+}
+.content-preview-rating-label{
+ color:#aaa;
+ font-size:11px;
+ font-weight:800;
+ text-transform:uppercase;
+ letter-spacing:1px;
+ margin-bottom:8px;
+}
+.content-preview-reactions{
+ display:flex;
+ gap:9px;
+ margin-bottom:22px;
+}
+.reaction-btn{
+ width:42px;
+ height:42px;
+ border-radius:50%;
+ border:1px solid #555;
+ background:#171717;
+ color:#fff;
+ cursor:pointer;
+ font-size:19px;
+ display:grid;
+ place-items:center;
+ transition:.18s ease;
+}
+.reaction-btn:hover,.reaction-btn.active{
+ background:#fff;
+ color:#111;
+ border-color:#fff;
+ transform:scale(1.06);
+}
+.content-preview-actions{display:flex;gap:10px}
+.preview-favorite{
+ border:1px solid #777;
+ background:rgba(255,255,255,.08);
+ color:#fff;
+ border-radius:5px;
+ padding:10px 15px;
+ font-weight:800;
+ cursor:pointer;
+}
+.preview-favorite:hover{background:#fff;color:#111}
+.content-preview-media{
+ position:relative;
+ min-height:520px;
+ background:#000;
+ overflow:hidden;
+}
+.content-preview-video{
+ width:100%;
+ height:100%;
+ min-height:520px;
+ display:block;
+ object-fit:cover;
+ border:0;
+ background:#000;
+}
+.content-preview-media::after{
+ content:"";
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ background:linear-gradient(90deg,rgba(0,0,0,.55),transparent 30%),
+            linear-gradient(0deg,rgba(0,0,0,.48),transparent 45%);
+}
+.content-preview-play{
+ position:absolute;
+ z-index:5;
+ left:50%;
+ top:50%;
+ transform:translate(-50%,-50%);
+ width:76px;
+ height:76px;
+ border-radius:50%;
+ border:2px solid rgba(255,255,255,.8);
+ background:rgba(0,0,0,.45);
+ color:#fff;
+ font-size:31px;
+ padding-left:5px;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+ backdrop-filter:blur(4px);
+ transition:.2s ease;
+ box-shadow:0 8px 35px rgba(0,0,0,.55);
+}
+.content-preview-play:hover{
+ background:rgba(255,255,255,.95);
+ color:#111;
+ transform:translate(-50%,-50%) scale(1.08);
+}
+.content-preview-close{
+ position:absolute;
+ z-index:10;
+ right:14px;
+ top:14px;
+ width:34px;
+ height:34px;
+ border:0;
+ border-radius:50%;
+ background:rgba(0,0,0,.7);
+ color:#fff;
+ font-size:23px;
+ cursor:pointer;
+}
+.content-preview-close:hover{background:#fff;color:#111}
+.content-preview-empty{
+ height:100%;
+ min-height:520px;
+ display:grid;
+ place-items:center;
+ color:#888;
+ background:#111;
+}
+@media(max-width:800px){
+ .content-preview-modal{
+  width:min(96vw,620px);
+  grid-template-columns:1fr;
+  max-height:90vh;
+  overflow:auto;
+ }
+ .content-preview-media{min-height:300px;order:-1}
+ .content-preview-video{min-height:300px;height:300px}
+ .content-preview-empty{min-height:300px}
+ .content-preview-info{padding:25px 22px 28px}
+ .content-preview-info h2{font-size:30px}
+ .content-preview-play{width:64px;height:64px;font-size:26px}
+}
+
+
+/* Player SD transplantado do projeto StreamDrive_Player_URL_Video */
+.modal-player-mode .sd-player-box{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;padding:0!important;margin:0!important;border-radius:0!important;background:#000!important;overflow:hidden!important}
+.sd-player{position:relative;width:100%;height:100%;min-height:100vh;background:#000;color:#fff;overflow:hidden;font-family:Arial,Helvetica,sans-serif;isolation:isolate}
+.sd-stage{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:1;filter:none!important;mix-blend-mode:normal!important;opacity:1!important;transform:none!important;isolation:auto!important}
+.sd-video{width:100%;height:100%;object-fit:contain;background:#000;border:0;display:block;filter:none!important;mix-blend-mode:normal!important;opacity:1!important;transform:none!important;backface-visibility:visible!important;isolation:auto!important;color-scheme:dark;will-change:auto}
+/* Séries: o vídeo fica em uma camada limpa, sem vinheta ou composição sobreposta. Isso evita dominantes roxas/verdes em alguns decodificadores do Chrome. */
+.sd-series-player .sd-stage,.sd-series-player .sd-video{filter:none!important;mix-blend-mode:normal!important;opacity:1!important;transform:none!important}
+.sd-series-player .sd-vignette{display:none!important}
+.sd-drive-frame{width:100%;height:100%;border:0;background:#000;display:block}
+.sd-drive-note{position:absolute;right:24px;bottom:118px;background:rgba(0,0,0,.62);padding:7px 11px;border-radius:4px;font-size:11px;color:#bbb;opacity:.65;pointer-events:none}
+.sd-vignette{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.82),rgba(0,0,0,.12) 18%,transparent 42%,rgba(0,0,0,.12) 60%,rgba(0,0,0,.92) 100%)}
+.sd-topbar{position:absolute;top:0;left:0;right:0;height:92px;padding:24px 42px;z-index:10;display:flex;align-items:flex-start;gap:24px;box-sizing:border-box;background:linear-gradient(to bottom,rgba(0,0,0,.72),transparent);transition:opacity .25s,transform .25s}
+.sd-back{appearance:none;border:0;background:rgba(0,0,0,.58);color:#fff;border-radius:5px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.sd-back:hover{background:rgba(255,255,255,.15)}
+.sd-title{font-size:18px;font-weight:700;padding-top:11px;text-shadow:0 2px 8px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw}
+.sd-brand{margin-left:auto;color:#e50914;font-weight:900;letter-spacing:-1px;font-size:20px;padding-top:9px;text-shadow:0 2px 12px #000}
+.sd-info{position:absolute;left:5%;bottom:116px;z-index:6;width:min(650px,86vw);text-shadow:0 2px 10px #000;transition:opacity .25s,transform .25s}
+.sd-label{font-size:12px;font-weight:800;letter-spacing:2px;color:#ddd;margin-bottom:8px}
+.sd-info h1{font-size:clamp(28px,4vw,54px);line-height:1.03;margin:0 0 12px;font-weight:800}
+.sd-info p{font-size:15px;line-height:1.55;color:#eee;margin:0 0 16px;max-width:620px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sd-actions{display:flex;gap:10px}.sd-add{border:0;border-radius:5px;background:#fff;color:#111;padding:10px 16px;font-weight:800;cursor:pointer}.sd-add:hover{background:#ddd}.sd-episodes{background:rgba(80,80,80,.9);color:#fff}.sd-center-controls{position:absolute;z-index:8;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;gap:24px;opacity:0;transition:opacity .2s;pointer-events:none}.sd-player:not(.sd-ui-hidden) .sd-center-controls{opacity:1;pointer-events:auto}.sd-big-play{position:relative;z-index:1;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:rgba(20,20,20,.78);border:2px solid rgba(255,255,255,.85);color:#fff;font-size:28px;cursor:pointer;box-shadow:0 5px 25px rgba(0,0,0,.55);transition:transform .2s,background .2s}.sd-big-play:hover{transform:scale(1.08);background:rgba(35,35,35,.94)}.sd-player.sd-playing .sd-big-play{font-size:28px}.sd-center-skip{width:68px;height:68px;border:0;border-radius:50%;background:rgba(20,20,20,.62);color:#fff;display:grid;place-items:center;position:relative;font-size:30px;cursor:pointer;transition:transform .2s,background .2s}.sd-center-skip:hover{transform:scale(1.08);background:rgba(35,35,35,.9)}.sd-center-skip span{position:absolute;font-size:10px;font-weight:900;bottom:14px;left:50%;transform:translateX(-50%)}
+.sd-player:not(.sd-playing) .sd-big-play{opacity:1}.sd-big-play:hover{transform:translate(-50%,-50%) scale(1.06)}
+.sd-controls{position:absolute;left:0;right:0;bottom:0;z-index:9;padding:0 4% 25px;box-sizing:border-box;background:linear-gradient(to top,rgba(0,0,0,.98),rgba(0,0,0,.68) 65%,transparent);transition:opacity .25s,visibility .25s}
+.sd-progress-wrap{position:relative;height:18px;display:flex;align-items:center}.sd-progress-track{position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.3);border-radius:5px}.sd-progress-fill{height:100%;width:0;background:#e50914;border-radius:5px}.sd-progress{position:relative;width:100%;height:18px;margin:0;appearance:none;background:transparent;cursor:pointer;z-index:2}.sd-progress::-webkit-slider-thumb{appearance:none;width:13px;height:13px;border-radius:50%;background:#e50914}.sd-progress::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#e50914}
+.sd-control-row{display:flex;align-items:center;gap:9px;height:42px}.sd-control{width:35px;height:35px;border:0;background:transparent;color:#fff;display:grid;place-items:center;font-size:20px;cursor:pointer;padding:0}.sd-control:hover{transform:scale(1.08)}.sd-control.skip{position:relative;font-size:23px}.sd-control.skip small{position:absolute;font-size:7px;bottom:7px;left:50%;transform:translateX(-50%);font-weight:900}.sd-volume-icon{font-size:19px}.sd-volume{width:78px;height:18px;appearance:none;background:transparent}.sd-volume::-webkit-slider-runnable-track{height:3px;background:#aaa;border-radius:4px}.sd-volume::-webkit-slider-thumb{appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;margin-top:-3.5px}.sd-volume::-moz-range-track{height:3px;background:#aaa}.sd-volume::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:#fff}.sd-time{font-size:13px;color:#ddd;margin-left:4px}.sd-spacer{flex:1}.sd-settings{display:none;position:absolute;right:4%;bottom:70px;background:rgba(24,24,24,.98);border:1px solid rgba(255,255,255,.12);border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.5);padding:12px;min-width:140px}.sd-player.sd-settings-open .sd-settings{display:block}.sd-speed-menu{display:flex;flex-direction:column;gap:3px}.sd-speed-menu strong{font-size:12px;color:#aaa;padding:3px 8px 7px}.sd-speed-menu button{border:0;background:transparent;color:#fff;text-align:left;padding:7px 8px;border-radius:3px;cursor:pointer}.sd-speed-menu button:hover,.sd-speed-menu button.active{background:#333}.sd-empty{width:100%;height:100%;display:grid;place-items:center;align-content:center;text-align:center;background:#080808;color:#fff}.sd-empty-icon{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#e50914;font-size:28px;font-weight:900;margin-bottom:12px}.sd-empty h2{margin:0 0 8px}.sd-empty p{color:#aaa;margin:0}.sd-ui-hidden .sd-controls,.sd-ui-hidden .sd-info,.sd-ui-hidden .sd-center-controls{opacity:0;visibility:hidden;pointer-events:none}.sd-ui-hidden .sd-topbar{opacity:0;visibility:hidden}.sd-ui-hidden{cursor:none}
+@media(max-width:700px){.sd-topbar{padding:16px;height:74px;gap:10px}.sd-back{font-size:13px;padding:8px 12px}.sd-title{font-size:14px;padding-top:9px;max-width:48vw}.sd-brand{font-size:16px;padding-top:8px}.sd-info{left:6%;bottom:105px;width:88vw}.sd-info h1{font-size:28px}.sd-info p{font-size:13px;-webkit-line-clamp:2}.sd-controls{padding:0 4% 16px}.sd-volume{width:55px}.sd-time{font-size:11px}.sd-center-controls{gap:18px}.sd-center-skip{width:58px;height:58px;font-size:25px}.sd-big-play{width:58px;height:58px;font-size:23px}.sd-drive-note{bottom:90px;right:12px}.sd-control{font-size:18px;width:31px}}
+@media(hover:none){.sd-ui-hidden{cursor:auto}.sd-ui-hidden .sd-topbar{opacity:1;visibility:visible}.sd-ui-hidden .sd-controls{opacity:1;visibility:visible}}
+
+
+/* Menu superior — visual StreamDrive com 70% de transparência e sem bordas */
+.topbar{
+  background:rgba(10,10,10,.30)!important;
+  border:none!important;
+  box-shadow:none!important;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.topbar .top-nav-link,
+.topbar .nav-menu-trigger,
+.topbar .top-search-btn,
+.topbar .top-icon-btn,
+.topbar .kids-link,
+.topbar .profile-trigger{
+  border:none!important;
+  outline:none!important;
+  box-shadow:none!important;
+}
+.topbar .profile-trigger .top-profile,
+.topbar .profile-trigger.top-profile{
+  border:none!important;
+}
+.topbar .notification-btn b{border:none!important;}
+.topbar .search.search-open{border:none!important;outline:none!important;}
+
+
+/* Menus suspensos Filmes/Séries — 70% de opacidade, sem borda */
+.dropdown-menu, .submenu, .nav-dropdown, .category-dropdown, .menu-dropdown {
+  background: rgba(20, 20, 20, 0.70) !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dropdown-menu *, .submenu *, .nav-dropdown *, .category-dropdown *, .menu-dropdown * {
+  border-color: transparent !important;
+}
+
+/* =========================================================
+   Janela de Mais informações — experiência inspirada em
+   serviços de streaming, mantendo o tema visual do projeto.
+   ========================================================= */
+.netflix-info-modal{
+ position:relative;width:min(980px,96vw);max-height:92vh;overflow:auto;background:#141414;border-radius:8px;
+ box-shadow:0 30px 90px rgba(0,0,0,.85);color:#fff;isolation:isolate;scrollbar-width:thin;
+}
+.netflix-info-backdrop{position:absolute;inset:0 0 auto;height:440px;overflow:hidden;z-index:-1;background:#090909}
+.netflix-info-backdrop img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:brightness(.72)}
+.netflix-info-gradient{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,20,20,.05) 0%,rgba(20,20,20,.08) 18%,rgba(20,20,20,.74) 66%,#141414 100%),linear-gradient(90deg,rgba(0,0,0,.65),transparent 72%)}
+.netflix-info-content{position:relative;min-height:650px;display:flex;align-items:flex-end;padding:230px 7% 42px}
+.netflix-info-main{width:min(650px,100%);text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.netflix-info-kicker{font-size:12px;font-weight:800;letter-spacing:2px;color:#ddd;margin-bottom:9px}
+.netflix-info-main h1{font-size:clamp(34px,5vw,58px);line-height:1.04;margin:0 0 13px;font-weight:800;letter-spacing:-.8px}
+.netflix-info-meta{font-size:14px;font-weight:600;color:#eee;margin-bottom:14px}
+.netflix-info-synopsis{font-size:15px;line-height:1.65;color:#eee;max-width:680px;margin:0 0 22px}
+.netflix-info-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;text-shadow:none}
+.netflix-info-play{min-width:130px}
+.netflix-info-list{min-width:150px;background:rgba(70,70,70,.88)}
+.netflix-info-close{position:absolute;z-index:5;top:18px;right:18px;width:42px;height:42px;border:0;border-radius:50%;background:rgba(24,24,24,.88);color:#fff;font-size:28px;line-height:1;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+.netflix-info-close:hover{background:#333;transform:scale(1.04)}
+.netflix-info-stats{display:flex;gap:18px;flex-wrap:wrap;margin:2px 0 15px;color:#bbb;font-size:13px}
+.netflix-info-stats span+span{position:relative;padding-left:18px}
+.netflix-info-stats span+span:before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;border-radius:50%;background:#777;transform:translateY(-50%)}
+.netflix-info-section{border-top:1px solid rgba(255,255,255,.16);padding-top:18px;margin-top:8px}
+.netflix-info-section h3{margin:0 0 10px;font-size:18px}
+.netflix-info-episodes{display:grid;gap:8px;max-width:560px}
+.netflix-season-line{display:flex;justify-content:space-between;gap:18px;padding:11px 13px;border-radius:4px;background:rgba(40,40,40,.72);color:#ddd;font-size:13px}
+.netflix-season-line span{color:#999}
+.modal:has(.netflix-info-modal){background:rgba(0,0,0,.82);backdrop-filter:blur(4px);padding:18px}
+.modal:has(.netflix-info-modal) .modal-box{width:auto;max-width:none;max-height:none;padding:0;background:transparent;overflow:visible;border-radius:0}
+@media(max-width:700px){
+ .netflix-info-modal{width:96vw;max-height:94vh;border-radius:6px}
+ .netflix-info-backdrop{height:330px}
+ .netflix-info-content{min-height:620px;padding:190px 6% 28px}
+ .netflix-info-main h1{font-size:34px}
+ .netflix-info-synopsis{font-size:14px;line-height:1.55}
+ .netflix-info-close{top:12px;right:12px;width:38px;height:38px;font-size:25px}
+}
+
+/* Informações inline — layout fiel à referência enviada: texto à esquerda, prévia à direita. */
+.inline-content-info{
+  grid-column:1/-1;position:relative;display:grid;grid-template-columns:minmax(360px,46%) minmax(420px,54%);
+  min-height:370px;margin:2px 0 8px;background:#050505;border-radius:3px;overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.72);animation:inlineInfoOpen .22s ease both;z-index:20;
+}
+.inline-info-body{position:relative;display:flex;align-items:stretch;padding:34px 42px 30px 34px;background:linear-gradient(90deg,#050505 0%,#070707 72%,#0a0a0a 100%);min-width:0}
+.inline-info-main{width:100%;display:flex;flex-direction:column;min-width:0;color:#fff;padding-top:4px}
+.inline-info-kicker{font-size:10px;font-weight:900;letter-spacing:1.7px;color:#aaa;margin:0 0 8px;text-transform:uppercase}
+.inline-info-main h2{font-size:clamp(30px,3.6vw,48px);line-height:1.02;margin:0 0 12px;font-weight:800;letter-spacing:-.7px;color:#fff}
+.inline-info-meta{font-size:12px;font-weight:600;color:#ddd;margin-bottom:13px}
+.inline-info-synopsis{font-size:13px;line-height:1.55;color:#d8d8d8;max-width:510px;margin:0 0 16px}
+.inline-info-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:auto;padding-top:18px}
+.inline-info-play{min-width:112px}
+.inline-info-list{min-width:130px;background:rgba(70,70,70,.92)}
+.inline-info-close{position:absolute;top:13px;right:13px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(45,45,45,.88);color:#fff;font-size:23px;line-height:1;cursor:pointer;z-index:5;display:grid;place-items:center}
+.inline-info-close:hover{background:#fff;color:#111}
+.inline-info-stats{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 11px;color:#aaa;font-size:11px}
+.inline-info-stats span+span{position:relative;padding-left:16px}.inline-info-stats span+span:before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;border-radius:50%;background:#777;transform:translateY(-50%)}
+.inline-info-episodes{border-top:1px solid rgba(255,255,255,.13);padding-top:11px;margin-top:6px;max-width:500px}.inline-info-episodes h3{font-size:14px;margin:0 0 7px}.inline-season-line{display:flex;justify-content:space-between;gap:15px;padding:5px 0;color:#ddd;font-size:11px;border-bottom:1px solid rgba(255,255,255,.07)}
+.inline-info-media{position:relative;min-height:370px;background:#090909;overflow:hidden}
+.inline-info-preview{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center center}
+.inline-info-media-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.18) 0%,transparent 24%,rgba(0,0,0,.05) 100%),linear-gradient(0deg,rgba(0,0,0,.2),transparent 35%);pointer-events:none}
+.inline-info-preview-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border:2px solid rgba(255,255,255,.92);border-radius:50%;background:rgba(0,0,0,.34);color:#fff;font-size:27px;line-height:1;display:grid;place-items:center;padding-left:4px;cursor:pointer;backdrop-filter:blur(2px);transition:transform .18s,background .18s}
+.inline-info-preview-play:hover{transform:translate(-50%,-50%) scale(1.08);background:rgba(0,0,0,.55)}
+.card.inline-info-open{transform:none!important;z-index:25!important;box-shadow:none!important}
+/* Ao abrir Mais informações, a miniatura selecionada recolhe para deixar a área de informações ocupar a linha inteira. */
+.card.inline-info-collapsed{
+  height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;
+  overflow:hidden!important;opacity:0!important;transform:scaleY(0)!important;
+  pointer-events:none!important;box-shadow:none!important;background:transparent!important;
+}
+.card.inline-info-collapsed>*{display:none!important}
+@keyframes inlineInfoOpen{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:800px){
+ .inline-content-info{grid-template-columns:1fr;min-height:0}
+ .inline-info-media{height:250px;min-height:250px;grid-row:1}
+ .inline-info-body{min-height:300px;padding:28px 20px 22px;grid-row:2}
+ .inline-info-main h2{font-size:30px}
+ .inline-info-close{top:10px;right:10px}
+ .inline-info-actions{margin-top:16px;padding-top:0}
+}
+
+/* Player exclusivo para séries — painel interno de temporadas e episódios */
+.sd-episodes-control{width:auto!important;padding:0 9px!important;gap:6px;font-size:14px!important}
+.sd-episodes-control span{font-size:12px;font-weight:700}
+.sd-episodes-panel{position:absolute;z-index:20;right:4%;bottom:86px;width:min(430px,92vw);max-height:min(72vh,620px);display:flex;flex-direction:column;background:rgba(16,16,16,.97);border:1px solid rgba(255,255,255,.14);border-radius:6px;box-shadow:0 14px 50px rgba(0,0,0,.65);backdrop-filter:blur(10px);overflow:hidden;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .2s,transform .2s,visibility .2s}
+.sd-player.sd-episodes-open .sd-episodes-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.sd-episodes-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 18px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sd-panel-kicker{display:block;color:#aaa;font-size:10px;font-weight:800;letter-spacing:1.8px;margin-bottom:4px}
+.sd-episodes-head h2{font-size:19px;line-height:1.15;margin:0;color:#fff}
+.sd-panel-close{width:32px;height:32px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1;cursor:pointer}
+.sd-panel-close:hover{background:rgba(255,255,255,.22)}
+.sd-season-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:12px 18px 9px;max-height:88px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.sd-season-tabs::-webkit-scrollbar{width:5px;height:0}.sd-season-tabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:10px}
+.sd-season-tab{min-width:0;width:100%;border:1px solid rgba(255,255,255,.15);background:#252525;color:#ddd;border-radius:4px;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-season-tab.active,.sd-season-tab:hover{background:#fff;color:#111;border-color:#fff}
+.sd-episode-list{overflow:auto;padding:4px 10px 14px;display:grid;gap:2px;scrollbar-width:thin}
+.sd-episode-row{display:grid;grid-template-columns:56px 1fr 28px;align-items:center;gap:10px;width:100%;border:0;border-radius:4px;background:transparent;color:#fff;text-align:left;padding:8px;cursor:pointer}
+.sd-episode-row:hover,.sd-episode-row.active{background:rgba(255,255,255,.1)}
+.sd-episode-thumb{width:56px;height:32px;border-radius:3px;background:#333;display:grid;place-items:center;color:#ddd;font-size:12px;font-weight:800}
+.sd-episode-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+.sd-episode-copy strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-episode-copy small{font-size:10px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-episode-play{opacity:0;color:#fff;font-size:13px}
+.sd-episode-row:hover .sd-episode-play,.sd-episode-row.active .sd-episode-play{opacity:1}
+.sd-episode-empty{padding:24px 14px;text-align:center;color:#999;font-size:13px}
+@media(max-width:700px){
+ .sd-episodes-control{padding:0 5px!important}
+ .sd-episodes-control span{display:none}
+ .sd-episodes-panel{left:3%;right:3%;bottom:74px;width:auto;max-height:66vh;border-radius:5px}
+ .sd-episodes-head{padding:14px 14px 10px}
+ .sd-season-tabs{grid-template-columns:repeat(3,minmax(0,1fr));max-height:120px;padding:10px 14px 8px}
+ .sd-episode-list{padding:3px 7px 10px}
+}
+
+/* Player exclusivo para séries — painel interno de temporadas e episódios */
+.sd-episodes-control{width:auto!important;padding:0 9px!important;gap:6px;font-size:14px!important}
+.sd-episodes-control span{font-size:12px;font-weight:700}
+.sd-episodes-panel{position:absolute;z-index:20;right:4%;bottom:86px;width:min(430px,92vw);max-height:min(72vh,620px);display:flex;flex-direction:column;background:rgba(16,16,16,.97);border:1px solid rgba(255,255,255,.14);border-radius:6px;box-shadow:0 14px 50px rgba(0,0,0,.65);backdrop-filter:blur(10px);overflow:hidden;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .2s,transform .2s,visibility .2s}
+.sd-player.sd-episodes-open .sd-episodes-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.sd-episodes-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 18px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sd-panel-kicker{display:block;color:#aaa;font-size:10px;font-weight:800;letter-spacing:1.8px;margin-bottom:4px}
+.sd-episodes-head h2{font-size:19px;line-height:1.15;margin:0;color:#fff}
+.sd-panel-close{width:32px;height:32px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1;cursor:pointer}
+.sd-panel-close:hover{background:rgba(255,255,255,.22)}
+.sd-season-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:12px 18px 9px;max-height:88px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.sd-season-tabs::-webkit-scrollbar{width:5px;height:0}.sd-season-tabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:10px}
+.sd-season-tab{min-width:0;width:100%;border:1px solid rgba(255,255,255,.15);background:#252525;color:#ddd;border-radius:4px;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-season-tab.active,.sd-season-tab:hover{background:#fff;color:#111;border-color:#fff}
+.sd-episode-list{overflow:auto;padding:4px 10px 14px;display:grid;gap:2px;scrollbar-width:thin}
+.sd-episode-row{display:grid;grid-template-columns:56px 1fr 28px;align-items:center;gap:10px;width:100%;border:0;border-radius:4px;background:transparent;color:#fff;text-align:left;padding:8px;cursor:pointer}
+.sd-episode-row:hover,.sd-episode-row.active{background:rgba(255,255,255,.1)}
+.sd-episode-thumb{width:56px;height:32px;border-radius:3px;background:#333;display:grid;place-items:center;color:#ddd;font-size:12px;font-weight:800}
+.sd-episode-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+.sd-episode-copy strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-episode-copy small{font-size:10px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-episode-play{opacity:0;color:#fff;font-size:13px}
+.sd-episode-row:hover .sd-episode-play,.sd-episode-row.active .sd-episode-play{opacity:1}
+.sd-episode-empty{padding:24px 14px;text-align:center;color:#999;font-size:13px}
+@media(max-width:700px){
+ .sd-episodes-control{padding:0 5px!important}
+ .sd-episodes-control span{display:none}
+ .sd-episodes-panel{left:3%;right:3%;bottom:74px;width:auto;max-height:66vh;border-radius:5px}
+ .sd-episodes-head{padding:14px 14px 10px}
+ .sd-season-tabs{grid-template-columns:repeat(3,minmax(0,1fr));max-height:120px;padding:10px 14px 8px}
+ .sd-episode-list{padding:3px 7px 10px}
+}
+
+/* Temporadas e episódios dentro da informação inline da série. */
+.inline-series-seasons{margin-top:20px;border-top:1px solid rgba(255,255,255,.12);padding-top:13px;max-width:560px}
+.inline-series-seasons-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:#fff;font-size:14px}
+.inline-series-seasons-head span{color:#999;font-size:11px}
+.inline-season-block{border-top:1px solid rgba(255,255,255,.09)}
+.inline-season-block:last-child{border-bottom:1px solid rgba(255,255,255,.09)}
+.inline-season-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;border:0;background:transparent;color:#fff;padding:9px 4px;text-align:left;font-size:14px;font-weight:700;line-height:1.2;cursor:pointer}
+.inline-season-toggle:hover{color:#ddd;background:rgba(255,255,255,.035)}
+.inline-season-chevron{color:#aaa;font-size:15px;min-width:18px;text-align:center;transition:transform .2s ease}
+.inline-season-block.open .inline-season-chevron{color:#fff}
+.inline-season-episodes{display:none;overflow:hidden;padding:0;opacity:0}
+.inline-season-block.open .inline-season-episodes{display:grid;gap:2px;padding:0 0 7px;opacity:1}
+.inline-season-block.open .inline-season-toggle{background:rgba(255,255,255,.035)}
+.inline-episode-link{width:100%;display:grid;grid-template-columns:34px 1fr 24px;align-items:center;gap:10px;border:0;border-radius:3px;background:transparent;color:#ddd;text-align:left;padding:9px 7px;cursor:pointer}
+.inline-episode-link:hover{background:rgba(255,255,255,.09);color:#fff}
+.inline-episode-number{width:28px;height:28px;border-radius:3px;background:#2b2b2b;display:grid;place-items:center;font-size:11px;color:#aaa}
+.inline-episode-name{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inline-episode-play{opacity:0;text-align:center;color:#fff}
+.inline-episode-link:hover .inline-episode-play{opacity:1}
+.inline-episode-empty{padding:12px;color:#888;font-size:12px}
+@media(max-width:800px){
+ .inline-series-seasons{max-width:none}
+ .inline-season-toggle{padding:12px 2px}
+ .inline-episode-link{padding:9px 2px}
+}
+
+/* Ajuste fino do painel de temporadas do player de séries */
+.sd-episodes-panel{width:min(500px,92vw);max-height:min(78vh,680px)}
+.sd-episodes-head{padding:20px 20px 14px}
+.sd-episodes-head h2{font-size:20px}
+.sd-season-tabs{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:14px 20px 12px;max-height:110px}
+.sd-season-tab{min-height:38px;padding:9px 7px;font-size:12.5px;border-radius:5px}
+.sd-episode-list{padding:6px 12px 16px;gap:3px}
+@media (max-width:700px){
+  .sd-episodes-panel{left:3%;right:3%;width:auto;max-height:72vh}
+  .sd-season-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-height:140px;padding:12px 16px 10px}
+  .sd-season-tab{min-height:38px}
+}
+
+/* Séries: menu limpo sem barra visual de rolagem */
+.nav-dropdown{
+ scrollbar-width:none;
+ -ms-overflow-style:none;
+}
+.nav-dropdown::-webkit-scrollbar{width:0;height:0;display:none}
+
+/* Página exclusiva de Séries */
+.series-landing-hero{
+ min-height:230px;
+ position:relative;
+ display:flex;
+ align-items:flex-end;
+ padding:105px 4% 42px;
+ background:linear-gradient(180deg,#111 0%,#080808 100%);
+ border-bottom:1px solid rgba(255,255,255,.06);
+}
+.series-landing-content{position:relative;z-index:2;max-width:760px}
+.series-landing-content h1{font-size:clamp(36px,5vw,56px);margin:8px 0 8px}
+.series-landing-content p{margin:0;color:#aaa;font-size:16px}
+.series-landing-hero + .container{padding-top:34px}
+@media(max-width:700px){
+ .series-landing-hero{min-height:190px;padding:92px 5% 30px}
+ .series-landing-content h1{font-size:36px}
+}
+/* Catálogo de séries: imagens reais carregadas do TVMaze e hero compartilhado com a Home. */
+.poster{background:#111;object-fit:cover}
+.hero-preview{isolation:isolate}
+.hero-preview img{width:100%;height:100%;object-fit:cover}
+/* Esconde a barra sem remover a rolagem por teclado/toque. */
+.nav-dropdown::-webkit-scrollbar{display:none;width:0;height:0}
+.nav-dropdown{scrollbar-width:none;-ms-overflow-style:none}
+
+.image-credit{font-size:11px;color:#555;margin-left:6px}.image-credit a{color:#777}
+
+/* Painel de temporadas do player: compacto, legível e numerado. */
+.sd-season-tabs{
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:8px !important;
+  padding:10px !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+.sd-season-tab{
+  min-width:0 !important;
+  min-height:42px !important;
+  padding:9px 6px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:5px !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+.sd-season-tab span{display:block !important;font-size:14px !important;}
+@media (max-width:700px){
+ .sd-season-tabs{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:6px !important;}
+ .sd-season-tab{min-height:38px !important;font-size:13px !important;}
+}
+
+
+/* Play/Pause central fixo: a troca entre ▶ e ❚❚ não altera posição nem tamanho. */
+.sd-big-play{
+  width:68px!important;
+  height:68px!important;
+  min-width:68px!important;
+  min-height:68px!important;
+  flex:0 0 68px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+  transition:background .2s!important;
+  overflow:hidden!important;
+}
+.sd-big-play:hover,.sd-big-play:focus-visible{
+  transform:none!important;
+}
+.sd-big-play-icon{
+  display:inline-flex;
+  width:1.35em;
+  height:1.35em;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  text-align:center;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:1em;
+  flex:0 0 1.35em;
+}
+@media(max-width:700px){
+  .sd-big-play{width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;flex-basis:58px!important}
+}
+
+
+/* Correção de compatibilidade Chrome — player de séries.
+   Mantém o vídeo em uma camada simples, sem filtros/composição que possam
+   deixar a página ou o vídeo preto em alguns drivers de GPU. */
+.sd-series-player,
+.sd-series-player .sd-stage,
+.sd-series-player .sd-video,
+.sd-series-player .sd-drive-frame {
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+  -webkit-mix-blend-mode: normal !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.sd-series-player .sd-stage {
+  isolation: auto !important;
+}
+.sd-series-player .sd-video {
+  will-change: auto !important;
+  image-rendering: auto;
+}
+
+/* =========================================================
+   V2.22 — limite lateral do catálogo + carrosséis controlados
+   Mantém a temática Netflix sem permitir expansão para fora da área.
+   ========================================================= */
+.container{
+  width:100%;
+  max-width:none;
+  margin-left:0;
+  margin-right:0;
+  padding-left:1.5%;
+  padding-right:1.5%;
+  box-sizing:border-box;
+  overflow-x:clip;
+}
+
+/* A área de cada categoria fica estritamente dentro da borda lateral. */
+.category-row{
+  position:relative;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.category-viewport{
+  width:100%;
+  max-width:100%;
+  overflow:hidden!important;
+  box-sizing:border-box;
+  clip-path:inset(0);
+}
+.category-carousel,
+.carousel-page{
+  max-width:100%;
+}
+
+/* A expansão da miniatura nunca ultrapassa a borda da área do catálogo. */
+.category-preview-card:hover,
+.category-preview-card:focus-within{
+  z-index:20!important;
+}
+
+/* As setas aparecem quando a categoria é acionada/selecionada. */
+.category-row:not(:hover):not(.carousel-active) .category-arrows{
+  opacity:0;
+  pointer-events:none;
+}
+.category-row:hover .category-arrows,
+.category-row.carousel-active .category-arrows,
+.category-row:focus-within .category-arrows{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* Mantém o botão dentro da largura disponível, sem criar barra horizontal. */
+.category-arrows{
+  position:relative;
+  z-index:30;
+}
+
+@media(max-width:1540px){
+  .container{max-width:100%;}
+}
+
+
+/* V2.23 — catálogo ampliado até próximo das margens da janela.
+   Mantém uma pequena margem lateral para preservar a leitura e impede overflow. */
+.container{
+  width:100%;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:1.5% !important;
+  padding-right:1.5% !important;
+  box-sizing:border-box;
+  overflow-x:clip !important;
+}
+.category-row{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+}
+.category-viewport{
+  width:100%;
+  max-width:none;
+}
+
+/* V2.24 — CORREÇÃO DEFINITIVA DA LARGURA DO CATÁLOGO
+   As fileiras devem ocupar a largura real da janela, deixando somente uma
+   margem pequena. Este bloco fica por último para vencer regras anteriores. */
+html, body {
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+}
+
+main.container,
+main.container.category-page-container,
+.container {
+  display:block !important;
+  width:100vw !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:18px !important;
+  padding-right:18px !important;
+  box-sizing:border-box !important;
+  overflow-x:hidden !important;
+}
+
+#catalog {
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+
+#catalog > .category-row,
+#catalog > .recently-watched-row,
+.category-row {
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  box-sizing:border-box !important;
+}
+
+.category-viewport {
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+}
+
+.category-carousel {
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
+
+.carousel-page {
+  width:100% !important;
+  max-width:100% !important;
+  min-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+@media (max-width:700px) {
+  main.container,
+  main.container.category-page-container,
+  .container {
+    width:100vw !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+}
+
+/* V2.25 — expansão das miniaturas acima dos elementos vizinhos.
+   Os botões "Detalhes" e "Mais informações" devem permanecer acessíveis
+   quando o mouse passa sobre o card, sem ficarem recortados pelo viewport. */
+.category-row,
+.category-viewport,
+.category-carousel,
+.carousel-page {
+  overflow: visible !important;
+  clip-path: none !important;
+}
+
+.category-preview-card {
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+  transform-origin: center center;
+}
+
+.category-preview-card:hover,
+.category-preview-card:focus-within {
+  z-index: 1000 !important;
+  overflow: visible !important;
+}
+
+/* Nos extremos, a expansão cresce para dentro da tela em vez de ser
+   empurrada para fora da borda. */
+.carousel-page .category-preview-card:first-child {
+  transform-origin: left center;
+}
+.carousel-page .category-preview-card:last-child {
+  transform-origin: right center;
+}
+
+/* Garante que a área de ações continue acima dos cards vizinhos. */
+.category-preview-card .card-body,
+.category-preview-card .card-hover-actions,
+.category-preview-card .card-actions {
+  position: relative;
+  z-index: 1001;
+}
+
+.category-preview-card .card-actions .small-btn,
+.category-preview-card .hover-more {
+  position: relative;
+  z-index: 1002;
+}
+
+/* A página continua sem barra horizontal; somente o card é sobreposto. */
+html,
+body {
+  overflow-x: hidden !important;
+}
+
+
+/* =========================================================
+   MOBILE LITE — mesma interface, menos mídia pré-carregada
+   ========================================================= */
+#boot-loader{position:fixed;inset:0;z-index:99999;background:#080808;display:grid;place-items:center;align-content:center;gap:12px;color:#aaa;font-size:13px;transition:opacity .2s ease}
+#boot-loader .boot-logo{font-size:24px;font-weight:900;letter-spacing:-1px;color:#e50914}
+#boot-loader .boot-text{min-height:18px}
+#boot-loader .boot-reload{margin-top:8px;background:#fff;color:#111;border:0;border-radius:4px;padding:9px 16px;font-weight:800}
+body.sd-ready #boot-loader{opacity:0;pointer-events:none}
+@media(max-width:700px), (pointer:coarse){
+  html,body{width:100%;min-width:0;overflow-x:hidden;background:#080808}
+  body{overscroll-behavior-x:none;-webkit-text-size-adjust:100%}
+  .container{padding:18px 3.2% 45px;width:100%;max-width:none}
+  .hero,.hero-preview{min-height:min(610px,calc(100svh - 60px));height:auto}
+  .hero-preview{padding:68px 7% 50px;background-position:center;background-size:cover}
+  .hero-preview-video,.category-page-preview-video,.card-preview-video,.inline-info-preview{display:none!important}
+  .hero-preview{background-image:linear-gradient(0deg,#080808 0%,rgba(8,8,8,.18) 58%,#080808 100%),url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=900&q=65')}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .card:hover,.category-preview-card:hover,.carousel-page .card:hover{transform:none!important}
+  .category-preview-card .card-preview-info,.category-preview-card .card-preview-shade{display:none!important}
+  .category-viewport{overflow:hidden!important}
+  .category-carousel{will-change:transform}
+  .category-arrows{opacity:1!important;pointer-events:auto!important;transform:none!important}
+  .carousel-arrow{width:36px;height:36px;font-size:24px}
+  .poster{aspect-ratio:2/3}
+  .modal{padding:0}
+  .modal-box{width:100vw;max-width:none;max-height:100dvh;border-radius:0;padding:16px;overflow:auto}
+  .sd-player,.modal-player-mode .sd-player-box{width:100vw!important;height:100dvh!important;min-height:100dvh!important;max-height:none!important;border-radius:0!important}
+  .sd-stage{inset:0;width:100%;height:100%;}
+  .sd-video,.sd-drive-frame{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;transform:none!important;filter:none!important;mix-blend-mode:normal!important}
+  .sd-controls{padding-left:max(3%,env(safe-area-inset-left));padding-right:max(3%,env(safe-area-inset-right));padding-bottom:max(12px,env(safe-area-inset-bottom));}
+  .sd-control-row{gap:5px;height:40px}
+  .sd-control{width:32px;height:32px;font-size:18px}
+  .sd-volume{width:48px}
+  .sd-time{font-size:10px}
+  .sd-info{bottom:94px;left:5%;width:90vw}
+  .sd-info h1{font-size:clamp(22px,7vw,30px)}
+  .sd-info p{font-size:12px;line-height:1.4;-webkit-line-clamp:2}
+  .sd-center-controls{gap:14px}
+  .sd-center-skip,.sd-big-play{width:54px;height:54px;min-width:54px;min-height:54px}
+  .sd-topbar{padding:12px max(4%,env(safe-area-inset-left));height:66px}
+  .sd-title{font-size:13px;max-width:55vw}
+  .sd-brand{font-size:15px}
+  .netflix-player,.netflix-player-box{width:100vw!important;height:100dvh!important;min-height:100dvh!important}
+  .netflix-video .video-large{object-fit:contain!important;width:100%!important;height:100%!important}
+  .recently-watched-row,.category-row{margin-bottom:28px}
+  img{content-visibility:auto}
+}
+@media(max-width:700px) and (orientation:landscape), (pointer:coarse) and (orientation:landscape){
+  .topbar{height:54px}
+  .hero,.hero-preview{min-height:calc(100svh - 54px)}
+  .hero-preview{padding-top:50px;padding-bottom:36px}
+  .sd-info{bottom:78px;width:70vw}
+  .sd-info p{display:none}
+  .sd-controls{padding-bottom:max(7px,env(safe-area-inset-bottom))}
+  .sd-topbar{height:58px;padding-top:9px}
+}
+#boot-loader.boot-finished{opacity:0!important;pointer-events:none!important;visibility:hidden!important}
+
+/* Home enxuta: a página inicial mostra apenas as cinco faixas solicitadas. */
+.home-special-row .release-card .card-body{min-height:100px}
+.release-badge{position:absolute;left:10px;top:10px;background:#e50914;color:#fff;font-weight:800;font-size:10px;padding:5px 7px;border-radius:3px;letter-spacing:.4px}
+.release-synopsis{color:#aaa;font-size:11px;line-height:1.35;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.movies-page{padding-bottom:30px}.movies-page-head{display:flex;justify-content:space-between;align-items:end;padding:25px 0 10px}.movies-page-head h1{font-size:38px;margin:4px 0}.movies-page-head p{color:#999;margin:0}.movies-page .category-row{margin-top:25px}
+.login-standalone{min-height:100vh;background:#050505}
+@media(max-width:800px){.movies-page-head{padding:18px 0}.movies-page-head h1{font-size:30px}.home-special-row .card{min-width:0}.release-synopsis{font-size:10px}}
